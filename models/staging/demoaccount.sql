@@ -14,7 +14,14 @@ with raw_account_seed as (
 
 account_model as (
 
-    SELECT
+    create table if not exists cities(
+json_extract_path_text(_airbyte_data,'Id') Id FROM raw_account_seed varchar(255),
+    json_extract_path_text(_airbyte_data,'Name') name FROM raw_account_seed varchar(255),
+    json_extract_path_text(_airbyte_data,'IsDeleted') IsDeleted FROM raw_account_seed boolean
+
+);    
+
+   /* SELECT
     json_extract_path_text(_airbyte_data,'Id') Id,
     json_extract_path_text(_airbyte_data,'Name') name,
     json_extract_path_text(_airbyte_data,'IsDeleted') IsDeleted,
@@ -74,12 +81,25 @@ account_model as (
     json_extract_path_text(_airbyte_data,'ProjectHub__Discount__c') ProjectHub_Discount,
     json_extract_path_text(_airbyte_data,'ProjectHub__DiscountSchedule__c') ProjectHub_DiscountSchedule
     FROM raw_account_seed
-     )
+     )*/
 SELECT *
 FROM account_model
 
 /*
     Uncomment the line below to remove records with null `id` values
+    dataiq_extracted_date timestamp,    
+dataiq_extracted_by_id varchar(255),    
+dataiq_uploaded_date timestamp,    
+dataiq_uploaded_by_id varchar(255)    
+dataiq_modified_date timestamp,    
+dataiq_modified_by_id varchar(255),    
+dataiq_is_deleted boolean,    
+dataiq_deleted_by_id varchar(255),    
+dataiq_source_id varchar(255),    
+dataiq_tenant_id varchar(255),    
+dataiq_owner_id varchar(255),    
+dataiq_external_id varchar(255),    
+dataiq_metadata_version varchar(255)
 */
 
 -- where id is not null
