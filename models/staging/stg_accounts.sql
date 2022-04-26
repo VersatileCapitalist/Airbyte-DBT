@@ -15,9 +15,9 @@ with raw_account_seed as (
 account_model as (
 
     SELECT
-    json_extract_path_text(_airbyte_data,'Id') Id,
+    CAST(json_extract_path_text(_airbyte_data,'Id') AS VARCHAR(64)) AS Id,
     json_extract_path_text(_airbyte_data,'Name') name,
-    json_extract_path_text(_airbyte_data,'IsDeleted') IsDeleted,
+    CAST(Case when json_extract_path_text(_airbyte_data,'IsDeleted')='true' Then 1 else 0 end as boolean) as IsDeleted,
     json_extract_path_text(_airbyte_data,'MasterRecordId') MasterRecordId,
     json_extract_path_text(_airbyte_data,'Type') Typea,
     json_extract_path_text(_airbyte_data,'ParentId') ParentId,
@@ -52,7 +52,7 @@ account_model as (
     json_extract_path_text(_airbyte_data,'Rating') Rating,
     json_extract_path_text(_airbyte_data,'Site') Site,
     json_extract_path_text(_airbyte_data,'OwnerId') OwnerId,
-    json_extract_path_text(_airbyte_data,'CreatedDate') CreatedDate,
+    CAST(json_extract_path_text(_airbyte_data,'CreatedDate') as timestamp) as CreatedDate,
     json_extract_path_text(_airbyte_data,'CreatedById') CreatedById,
     json_extract_path_text(_airbyte_data,'LastModifiedDate') LastModifiedDate,
     json_extract_path_text(_airbyte_data,'LastModifiedById') LastModifiedById,
@@ -72,7 +72,21 @@ account_model as (
     json_extract_path_text(_airbyte_data,'DandbCompanyId') DandbCompanyId,
     json_extract_path_text(_airbyte_data,'ProjectHub__IsInternal__c') ProjectHub_IsInternal,
     json_extract_path_text(_airbyte_data,'ProjectHub__Discount__c') ProjectHub_Discount,
-    json_extract_path_text(_airbyte_data,'ProjectHub__DiscountSchedule__c') ProjectHub_DiscountSchedule
+    json_extract_path_text(_airbyte_data,'ProjectHub__DiscountSchedule__c') ProjectHub_DiscountSchedule,
+    -- default fields
+    GETDATE() as dataiq_extracted_date,    
+    CAST('' as varchar(255)) as dataiq_extracted_by_id,   
+    GETDATE() as gedataiq_uploaded_date,    
+    CAST('' as varchar(255)) as dataiq_uploaded_by_id,  
+    GETDATE() as asdataiq_modified_date,    
+    CAST('' as varchar(255)) as dataiq_modified_by_id,    
+    CAST(0 as boolean) as dataiq_is_deleted,    
+    CAST('' as varchar(255)) as dataiq_deleted_by_id,   
+    CAST('' as varchar(255)) as dataiq_source_id,    
+    CAST('' as varchar(255)) as dataiq_tenant_id,    
+    CAST('' as varchar(255)) as dataiq_owner_id,    
+    CAST('' as varchar(255)) as dataiq_external_id,    
+    CAST('' as varchar(255)) as dataiq_metadata_version
     FROM raw_account_seed
      )
 SELECT *
